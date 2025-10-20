@@ -1,6 +1,7 @@
 # app/schemas/user_schema.py
 import enum
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 
 class UserRole(str, enum.Enum):
@@ -10,14 +11,14 @@ class UserRole(str, enum.Enum):
 class UserCreate(BaseModel):
     email: EmailStr  
     password: str
-    username: str | None = None 
+    username: Optional[str] = None
     
 
 
 class User(BaseModel):
     id: int
     email: EmailStr
-    username: str | None
+    username: Optional[str] = None
     role: UserRole
 
     class Config:
