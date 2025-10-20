@@ -1,0 +1,12 @@
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum
+from app.db.base import Base
+
+
+
+class Feedback(Base):
+    __tablename__ = "feedback"
+    id = Column(Integer, primary_key=True, index=True)
+    message = Column(String)
+    sentiment = Column(String)
+    room_id = Column(Integer, ForeignKey("rooms.id"))
+    guest_id = Column(Integer, ForeignKey("guests.id"))
