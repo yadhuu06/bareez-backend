@@ -1,0 +1,32 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+
+# Virtual environment
+venv/
+
+# Environment variables
+.env
+
+# Editor settings
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Docker
+*.pid
+*.sock
+*.db
+
+# Alembic migrations (optional later)
+alembic/
+migrations/
