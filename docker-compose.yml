@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # The backend service for our FastAPI application
+  backend:
+    build: .  # Build the image from the Dockerfile in the current directory
+    container_name: hotel_dashboard_backend
+    ports:
+      - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
+    env_file:
+      - ./.env  # Pass environment variables from the .env file
+    depends_on:
+      - db  # This service will wait for the 'db' service to be healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  # The PostgreSQL database service
+  db:
+    image: postgres:13-alpine  # Use the official PostgreSQL 13 image
+    container_name: hotel_dashboard_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/  # Persist database data
+    ports:
+      - "5432:5432"  # Map port 5432 for local connections if needed
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:  # Define the volume for data persistence
+```
+
+### Final Step: Create `requirements.txt`
+
+The `Dockerfile` needs a `requirements.txt` file to know which Python libraries to install.
+
+1.  **Make sure your virtual environment is activated.**
+2.  Run this command in your project's root directory:
+
+    ```bash
+    pip freeze > requirements.txt
+    
+

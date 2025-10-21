@@ -24,7 +24,7 @@ def create_request(db: Session, request: RequestCreate) -> Request:
     db.add(db_request)
     db.commit()
     db.refresh(db_request)
-    return db_request
+    return get_request(db, db_request.id)
 
 def update_request(db: Session, db_request: Request, request_update: RequestUpdate) -> Request:
 
