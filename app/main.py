@@ -5,7 +5,7 @@ load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware 
 from app.core.config import settings
-from app.api import auth  
+from app.api import auth ,requests,feedback
 import uvicorn
 
 app = FastAPI(title="Bareez Hotel Dashboard")
@@ -29,8 +29,8 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth.router, prefix="/api", tags=["auth"])
-# app.include_router(requests.router, prefix="/api", tags=["requests"])
-# app.include_router(feedback.router, prefix="/api", tags=["feedback"])
+app.include_router(requests.router, prefix="/api", tags=["requests"])
+app.include_router(feedback.router, prefix="/api", tags=["feedback"])
 
 
 if __name__ == "__main__":
