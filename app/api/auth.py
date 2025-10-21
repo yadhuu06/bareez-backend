@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-
-from app.schemas.user_schema import UserCreate, User
-
+from app.schemas.user_schema import UserCreate, User, Token
 from app.crud.user import get_user_by_email, create_user
 from app.core.security import create_access_token, verify_password
 from app.db.session import get_db
@@ -25,14 +23,14 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     return create_user(db=db, user=user) 
 
 
-@router.post("/login/token")
+@router.post("/login", response_model=Token) 
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
     """
-    Handles user login and returns a JWT access token.
-    It verifies the user's email and password and then creates a JWT.
+    Handles user login and returns a JWT access token AND user role.
     """
+
     user = get_user_by_email(db, email=form_data.username) 
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
@@ -42,5 +40,10 @@ def login_for_access_token(
         )
     
     access_token = create_access_token(data={"sub": user.email})
-    return {"access_token": access_token, "token_type": "bearer"}
+    
 
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer",
+        "user_role": user.role.value 
+    }

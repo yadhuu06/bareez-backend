@@ -1,4 +1,3 @@
-# app/schemas/user_schema.py
 import enum
 from pydantic import BaseModel, EmailStr
 from typing import Optional
@@ -23,3 +22,10 @@ class User(BaseModel):
 
     class Config:
         from_attributes = True
+
+class Token(BaseModel):
+    """Schema for the successful login response."""
+    access_token: str
+    token_type: str
+    user_role: str
+
