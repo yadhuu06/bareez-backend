@@ -30,7 +30,7 @@ def create_new_feedback(
     ai_service = get_ai_analysis_service()
     sentiment = ai_service(service_type="sentiment", text=feedback.message)
     
-    # 3. Create the feedback in the database
+
     return feedback_crud.create_feedback(db=db, feedback=feedback, sentiment=sentiment)
 
 
@@ -38,7 +38,7 @@ def create_new_feedback(
 def generate_smart_response(
     feedback_id: int,
     db: Session = Depends(get_db),
-    current_manager: User = Depends(get_current_manager) # Manager only
+    current_manager: User = Depends(get_current_manager) 
 ):
     """
     Generates a smart, empathetic response for a piece of negative feedback.
@@ -48,14 +48,14 @@ def generate_smart_response(
     if not db_feedback:
         raise HTTPException(status_code=404, detail="Feedback not found")
     
-    # For this feature, we only generate responses for negative feedback
+    
     if db_feedback.sentiment != "Negative":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Smart responses can only be generated for negative feedback."
         )
 
-    # Call the AI service to generate the response
+
     ai_service = get_ai_analysis_service()
     smart_response = ai_service(service_type="response", text=db_feedback.message)
     
