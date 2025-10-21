@@ -27,21 +27,21 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
-    """
-    Handles user login and returns a JWT access token AND user role.
-    """
-
     user = get_user_by_email(db, email=form_data.username) 
-    if not user or not verify_password(form_data.password, user.hashed_password):
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,  
+            detail="Email not registered. Please register first.",
+        )
+
+    if not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
+            detail="Incorrect password.",
         )
     
     access_token = create_access_token(data={"sub": user.email})
     
-
     return {
         "access_token": access_token, 
         "token_type": "bearer",

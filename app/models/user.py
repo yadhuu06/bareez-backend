@@ -11,4 +11,3 @@ class User(Base):
     username = Column(String, index=True)
     hashed_password = Column(String, nullable=False)
     role = Column(Enum(UserRole), default=UserRole.STAFF, nullable=False)
-    
